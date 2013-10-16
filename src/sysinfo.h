@@ -77,17 +77,11 @@ void kernel(const char *File, int len)
  */
 		while (feof(f) != 1) {
 			fgets(Kyo, len, f);
-			if (strncmp(Kyo, "((", 1) == 0)
-				printf ("\n-");
-			if (strncmp(Kyo, "#", 1) == 0) {
-				printf ("\nVersion: #");
-			} else {
 /*
  * This function is fast, owing to this i feel. especially with gcc 
  * 4.3.2 & glibc 2.5+. it is faster than using: printf (Kyo);
  */
-				fprintf (stdout, "%s", Kyo);
-			}
+			fprintf (stdout, "%s", Kyo);
 			fflush(stdout);
 		}
 	}
