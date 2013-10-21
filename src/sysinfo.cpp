@@ -46,10 +46,6 @@ int main(int argc, char **argv)
 
 	if (argc > 1 and strncmp(argv[1], "1", BUF) == 0) {
 /*
- * My function:
- */
-		/*kernel("/proc/version", 2);*/
-/*
 * The utsname function:
 */
 		uname(&uname_pointer);
@@ -107,6 +103,10 @@ int main(int argc, char **argv)
 		printf ("Total RAM   : %5.1f MB\n", si.totalram / megabyte);
 		printf ("Free RAM   : %5.1f MB\n", si.freeram / megabyte);
 		printf ("Number of running processes : %d\n", si.procs);
+
+		/* Print the number of CPU cores available. */
+		int numCPU = sysconf(_SC_NPROCESSORS_CONF);
+		printf("The CPU has %i cores.\n", numCPU);
 
 	}
 
