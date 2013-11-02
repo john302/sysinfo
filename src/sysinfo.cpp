@@ -80,8 +80,7 @@ int main(int argc, char **argv)
 	}
 
 	if (argc > 1 and strncmp(argv[1], "2", BUF) == 0) {
-		printf("\t\tRam & swap information.\n");
-		kernel("/proc/swaps", 2);
+		printf("\t\tSystem information.\n");
 
 		/* This code from:
 		 * http://stackoverflow.com/questions/14345937/sysinfo-returns-incorrect-value-for-freeram-even-with-mem-unit
@@ -105,8 +104,8 @@ int main(int argc, char **argv)
 		printf ("Number of running processes : %d\n", si.procs);
 
 		/* Print the number of CPU cores available. */
-		int numCPU = sysconf(_SC_NPROCESSORS_CONF);
-		printf("The CPU has %i cores.\n", numCPU);
+		system("echo \"The computer has $(cat /proc/cpuinfo | grep CPU | wc -l) core(s).\"");
+		system("echo \"The CPU is running at: $(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq) HZ.\"");
 
 	}
 
@@ -140,12 +139,13 @@ int main(int argc, char **argv)
 		printf("--Motherboard vendor: ");
 		kernel("/sys/class/dmi/id/board_vendor", 3);
 	}
-/*
-	if (argc > 1 and strncmp(argv[1], "7", BUF) == 0) {
-		printf("\t\tHard drive information.\n");
 
+	if (argc > 1 and strncmp(argv[1], "7", BUF) == 0) {
+		printf("\t\tXorg information.\n");
+		system("echo \"The screen is set to these$(xdpyinfo  | grep 'dimensions:').\"");
+		system("echo \"The fonts are set to this$(xdpyinfo  | grep 'resolution:').\"");
 
 	}
-*/
+
 	return 0;
 }
