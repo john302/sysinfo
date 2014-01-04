@@ -40,6 +40,8 @@ int main(int argc, char **argv)
 {
 	struct utsname uname_pointer;
 	char* myarg1 = argv[1];
+	static char Args[256];
+	char buf[256];
 
 	if (!argc or !myarg1)
 		print_menu();
@@ -113,18 +115,34 @@ int main(int argc, char **argv)
 		printf("\t\tCdrom drive information.\n");
 
 
-		kernel("/proc/sys/dev/cdrom/info", 5);
+//		kernel("/proc/sys/dev/cdrom/info", 5);
+
+		strncpy(Args, "/proc/sys/dev/cdrom/info", 24);
+		sprintf(buf, "cat %s\n", Args);
+		fflush(stdout);
+		system(buf);
 
 	}
 
 	if (argc > 1 and strncmp(argv[1], "4", BUF) == 0) {
 		printf("\t\tSound Card information.\n");
-		kernel("/proc/asound/cards", 3);
+//		kernel("/proc/asound/cards", 3);
+
+		strncpy(Args, "/proc/asound/cards", 19);
+		sprintf(buf, "cat %s\n", Args);
+		fflush(stdout);
+		system(buf);
 	}
 
 	if (argc > 1 and strncmp(argv[1], "5", BUF) == 0) {
 		printf("\t\tReal Time Clock information.\n");
-		kernel("/proc/driver/rtc", 3);
+//		kernel("/proc/driver/rtc", 3);
+
+		strncpy(Args, "/proc/driver/rtc", 16);
+		sprintf(buf, "cat %s\n", Args);
+		fflush(stdout);
+		system(buf);
+
 	}
 
 	if (argc > 1 and strncmp(argv[1], "6", BUF) == 0) {
