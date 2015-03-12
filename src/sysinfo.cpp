@@ -14,7 +14,7 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 *
 * Description: System Information program.
-* Author: bejiitas_wrath <johncartwright302@hotmail.com>
+* Author: bejiitas_wrath <johncartwright302@dodo.com.au>
 * Created at: Thu Oct 12 23:11:06 EST 2006
 * Computer: deusexmachina
 * System: Linux deusexmachina 2.6.27-14
@@ -23,7 +23,7 @@
 *
 ********************************************************************/
 
-#include <linux/unistd.h>       /* for _syscallX macros/related stuff */
+//#include <linux/unistd.h>       /* for _syscallX macros/related stuff */
 #include <linux/kernel.h>       /* for struct sysinfo */
 #include <sys/sysinfo.h>        /* For the sysinfo struct. */
 #include <syscall.h>
@@ -163,6 +163,11 @@ int main(int argc, char **argv)
 		system("echo \"The screen is set to these$(xdpyinfo  | grep 'dimensions:').\"");
 		system("echo \"The fonts are set to this$(xdpyinfo  | grep 'resolution:').\"");
 
+	}
+
+	if (argc > 1 and strncmp(argv[1], "8", BUF) == 0) {
+		printf("\t\tIP information.\n");
+		system("ip a | grep -B 0 inet");
 	}
 
 	return 0;
