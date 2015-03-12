@@ -30,7 +30,7 @@
  * I got the idea for this from sdldoom. Very nice indeed.
  */
 
-enum { VERSION = 150 };
+enum { VERSION = 160 };
 #define SYSINFO "Sysinfo version v%i.%i"
 
 const char *p = "System Information Program";
@@ -44,7 +44,8 @@ void print_menu()
 	printf("3 - CDROM Information.\n4 - View list of sound cards.\n");
 	printf("5 - View Real Time Clock Information.\n");
 	printf("6 - View motherboard and BIOS information.\n");
-/*	printf("7 - View information about your hard drive.\n"); */
+	printf("7 - View information about your Xorg display.\n");
+	printf("8 - View information about your IP addresses.\n");
 
 	sprintf (ver, SYSINFO, VERSION / 100, VERSION % 100);
 
