@@ -6,12 +6,11 @@ TARGET = sysinfo
 
 # Check debug options
 
-CFLAGS =-DGNU_SOURCE -Wall -finline-functions \
--fforce-addr -funroll-loops
-LDFLAGS =-shared-libgcc
+CFLAGS =-DGNU_SOURCE -Wall -finline-functions -fforce-addr -funroll-loops
+LDFLAGS =-shared-libgcc -lX11
 
 # Our compiler
-CXX = g++
+CXX = gcc
 
 # Build a list of source and object files
 SRCS = $(wildcard src/*.c) $(wildcard src/*.cpp)

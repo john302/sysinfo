@@ -1,3 +1,7 @@
+/**
+@file sysinfo.cpp
+*/
+
 /* Emacs style mode select: -*- C++ -*- *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -32,9 +36,11 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
+#include <X11/Xlib.h>
 
 #include "sysinfo.h"
 #include "strings.h"
+#include "iface.h"
 
 int main(int argc, char **argv)
 {
@@ -43,8 +49,9 @@ int main(int argc, char **argv)
 	static char Args[256];
 	char buf[256];
 
-	if (!argc or !myarg1)
+	if (!argc or !myarg1) {
 		print_menu();
+	}
 
 	if (argc > 1 and strncmp(argv[1], "1", BUF) == 0) {
 /*
@@ -98,8 +105,8 @@ int main(int argc, char **argv)
 		sysinfo (&si);
 
 		/* Summarize interesting values. */
-		printf ("System uptime : %ld days, %ld:%02ld:%02ld\n", 
-		    si.uptime / day, (si.uptime % day) / hour, 
+		printf ("System uptime : %ld days, %ld:%02ld:%02ld\n",
+		    si.uptime / day, (si.uptime % day) / hour,
 		    (si.uptime % hour) / minute, si.uptime % minute);
 		printf ("Total RAM   : %5.1f MB\n", si.totalram / megabyte);
 		printf ("Free RAM   : %5.1f MB\n", si.freeram / megabyte);
@@ -160,15 +167,27 @@ int main(int argc, char **argv)
 
 	if (argc > 1 and strncmp(argv[1], "7", BUF) == 0) {
 		printf("\t\tXorg information.\n");
-		system("echo \"The screen is set to these$(xdpyinfo  | grep 'dimensions:').\"");
-		system("echo \"The fonts are set to this$(xdpyinfo  | grep 'resolution:').\"");
-
+		Display *display;
+		Screen *screen;
+		display = XOpenDisplay(NULL);
+		int count_screens = ScreenCount(display);
+		printf("Connected monitors: %d\n", count_screens);
+		for (int i = 0; i < count_screens; ++i) {
+			screen = ScreenOfDisplay(display, i);
+			printf("Screen resolution: %d: %dX%d\n", i + 1, screen->width, screen->height);
+		}
+		XCloseDisplay(display);
 	}
 
 	if (argc > 1 and strncmp(argv[1], "8", BUF) == 0) {
 		printf("\t\tIP information.\n");
-		system("ip a | grep -B 0 inet");
+		printf("-----------------------------------------------------\n\n\n");
+                iface();
+		printf("Printing the TCP table.\n");
+		printf("-----------------------------------------------------\n");
+		kernel("/proc/net/tcp", 2);
 	}
 
 	return 0;
 }
+
