@@ -36,8 +36,7 @@ enum { VERSION = 160 };
 const char *p = "System Information Program";
 char ver[128];
 
-void print_menu()
-{
+void print_menu() {
 	printf("\tSysinfo. %s\n\n", p);
 
 	printf("1 - Kernel Information.\n2 - Memory & processes.\n");
@@ -46,6 +45,7 @@ void print_menu()
 	printf("6 - View motherboard and BIOS information.\n");
 	printf("7 - View information about your Xorg display.\n");
 	printf("8 - View information about your IP addresses.\n");
+	printf("9 - View user information easily.\n");
 
 	sprintf (ver, SYSINFO, VERSION / 100, VERSION % 100);
 

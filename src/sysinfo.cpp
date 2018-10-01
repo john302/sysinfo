@@ -37,6 +37,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <X11/Xlib.h>
+#include <pwd.h>
 
 #include "sysinfo.h"
 #include "strings.h"
@@ -181,12 +182,55 @@ int main(int argc, char **argv)
 
 	if (argc > 1 and strncmp(argv[1], "8", BUF) == 0) {
 		printf("\t\tIP information.\n");
-		printf("-----------------------------------------------------\n\n\n");
-                iface();
-		printf("Printing the TCP table.\n");
-		printf("-----------------------------------------------------\n");
-		kernel("/proc/net/tcp", 2);
+//                iface();
+//		kernel("/proc/net/tcp", 2);
+/*
+                This was taken straight from BusyBox's implementation of arp,
+                 in busybox-1_21_0/networking/arp.c directory of the BusyBox
+                 1.21.0 tarball. Look at the arp_show() function in particular.
+*/
+                char line[500]; // Read with fgets().
+                char ip_address[500]; // Obviously more space than necessary, just illustrating here.
+                int hw_type;
+                int flags;
+                char mac_address[500];
+                char mask[500];
+                char device[500];
+
+                FILE *fp = fopen("/proc/net/arp", "r");
+                fgets(line, sizeof(line), fp);    // Skip the first line (column headers).
+                while(fgets(line, sizeof(line), fp))
+                {
+
+                    // Read the data.
+                        sscanf(line, "%s 0x%x 0x%x %s %s %s\n",
+                          ip_address,
+                          &hw_type,
+                          &flags,
+                          mac_address,
+                          mask,
+                          device);
+
+                    printf("IP: %s \n", ip_address);
+                    printf("MAC: %s \n", mac_address);
+                    printf("Dev: %s \n", device);
+                    printf("HW Type: %u \n", hw_type);
+                    printf("Mask: %s \n", mask);
+                }
+                fclose(fp);
 	}
+
+	if (argc > 1 and strncmp(argv[1], "9", BUF) == 0) {
+
+	        struct passwd *passwd;
+	        passwd = getpwuid ( getuid());
+
+	        fprintf(stdout, "\t\tUser information.\n\n");
+		fprintf(stdout, "The Login Name is: %s\n", passwd->pw_name);
+	        fprintf(stdout, "The Login shell is: %s\n", passwd->pw_shell);
+	        fprintf(stdout, "The Login /home is: %s\n", passwd->pw_dir);
+	        fprintf(stdout, "The user information is: %s\n", passwd->pw_gecos);
+        }
 
 	return 0;
 }
