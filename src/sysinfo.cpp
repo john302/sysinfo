@@ -32,6 +32,7 @@
 #include <sys/sysinfo.h>        /* For the sysinfo struct. */
 #include <syscall.h>
 #include <sys/utsname.h>
+#include <sys/sysinfo.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -47,8 +48,6 @@ int main(int argc, char **argv)
 {
 	struct utsname uname_pointer;
 	char* myarg1 = argv[1];
-	static char Args[256];
-	char buf[256];
 
 	if (!argc or !myarg1) {
 		print_menu();
@@ -113,43 +112,25 @@ int main(int argc, char **argv)
 		printf ("Free RAM   : %5.1f MB\n", si.freeram / megabyte);
 		printf ("Number of running processes : %d\n", si.procs);
 
-		/* Print the number of CPU cores available. */
-		system("echo \"The computer has $(cat /proc/cpuinfo | grep CPU | wc -l) core(s).\"");
-		system("echo \"The CPU is running at: $(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq) HZ.\"");
-
+                printf("This system has %d processors configured and %d processors available.\n", get_nprocs_conf(), get_nprocs());
 	}
 
 	if (argc > 1 and strncmp(argv[1], "3", BUF) == 0) {
 		printf("\t\tCdrom drive information.\n");
 
-
-//		kernel("/proc/sys/dev/cdrom/info", 5);
-
-		strncpy(Args, "/proc/sys/dev/cdrom/info", 24);
-		sprintf(buf, "cat %s\n", Args);
-		fflush(stdout);
-		system(buf);
-
+		kernel("/proc/sys/dev/cdrom/info", 5);
 	}
 
 	if (argc > 1 and strncmp(argv[1], "4", BUF) == 0) {
 		printf("\t\tSound Card information.\n");
-//		kernel("/proc/asound/cards", 3);
 
-		strncpy(Args, "/proc/asound/cards", 19);
-		sprintf(buf, "cat %s\n", Args);
-		fflush(stdout);
-		system(buf);
+		kernel("/proc/asound/cards", 3);
 	}
 
 	if (argc > 1 and strncmp(argv[1], "5", BUF) == 0) {
 		printf("\t\tReal Time Clock information.\n");
-//		kernel("/proc/driver/rtc", 3);
 
-		strncpy(Args, "/proc/driver/rtc", 16);
-		sprintf(buf, "cat %s\n", Args);
-		fflush(stdout);
-		system(buf);
+		kernel("/proc/driver/rtc", 3);
 
 	}
 
@@ -231,7 +212,6 @@ int main(int argc, char **argv)
 	        fprintf(stdout, "The Login /home is: %s\n", passwd->pw_dir);
 	        fprintf(stdout, "The user information is: %s\n", passwd->pw_gecos);
         }
-
 	return 0;
 }
 
