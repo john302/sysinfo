@@ -16,7 +16,7 @@
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
+/*
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -25,8 +25,42 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <linux/if_link.h>
+*/
 
 int iface(void) {
+
+        char line[500]; // Read with fgets().
+        char ip_address[500]; // Obviously more space than necessary, just illustrating here.
+        int hw_type;
+        int flags;
+        char mac_address[500];
+        char mask[500];
+        char device[500];
+
+        FILE *fp = fopen("/proc/net/arp", "r");
+        fgets(line, sizeof(line), fp);    // Skip the first line (column headers).
+        while(fgets(line, sizeof(line), fp))
+        {
+
+            // Read the data.
+                sscanf(line, "%s 0x%x 0x%x %s %s %s\n",
+                  ip_address,
+                  &hw_type,
+                  &flags,
+                  mac_address,
+                  mask,
+                  device);
+
+            printf("IP: %s \n", ip_address);
+            printf("MAC: %s \n", mac_address);
+            printf("Dev: %s \n", device);
+            printf("HW Type: %u \n", hw_type);
+            printf("Mask: %s \n", mask);
+        }
+        fclose(fp);
+        return 0;
+
+/*
         struct ifaddrs *ifaddr, *ifa;
         int family, s, n;
         char host[NI_MAXHOST];
@@ -36,8 +70,8 @@ int iface(void) {
            exit(EXIT_FAILURE);
         }
 
-        /* Walk through linked list, maintaining head pointer so we
-          can free list later */
+        // Walk through linked list, maintaining head pointer so we
+        //  can free list later
 
         for (ifa = ifaddr, n = 0; ifa != NULL; ifa = ifa->ifa_next, n++) {
            if (ifa->ifa_addr == NULL)
@@ -45,8 +79,8 @@ int iface(void) {
 
            family = ifa->ifa_addr->sa_family;
 
-           /* Display interface name and family (including symbolic
-              form of the latter for the common families) */
+           // Display interface name and family (including symbolic
+           //   form of the latter for the common families)
 
            printf("%-8s %s (%d)\n",
                   ifa->ifa_name,
@@ -55,7 +89,7 @@ int iface(void) {
                   (family == AF_INET6) ? "AF_INET6" : "???",
                   family);
 
-           /* For an AF_INET* interface address, display the address */
+           // For an AF_INET* interface address, display the address
 
            if (family == AF_INET || family == AF_INET6) {
                s = getnameinfo(ifa->ifa_addr,
@@ -83,6 +117,7 @@ int iface(void) {
         freeifaddrs(ifaddr);
 	fflush(stdout);
 	return 0;
+*/
 }
 
 #endif
