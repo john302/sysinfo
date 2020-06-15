@@ -18,7 +18,7 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 *
 * Description: System Information program.
-* Author: bejiitas_wrath <johncartwright302@dodo.com.au>
+* Author: bejiitas_wrath <johncartwright302@gmail.com>
 * Created at: Thu Oct 12 23:11:06 EST 2006
 * Computer: deusexmachina
 * System: Linux deusexmachina 2.6.27-14
@@ -33,6 +33,7 @@
 #include <syscall.h>
 #include <sys/utsname.h>
 #include <sys/sysinfo.h>
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -54,9 +55,7 @@ int main(int argc, char **argv)
 	}
 
 	if (argc > 1 and strncmp(argv[1], "1", BUF) == 0) {
-/*
-* The utsname function:
-*/
+/* * The utsname function: */
 		uname(&uname_pointer);
 		if (strlen (uname_pointer.domainname) < 7 or
 		    strncmp(uname_pointer.domainname, "(none)", 10) == 0) {
@@ -106,19 +105,21 @@ int main(int argc, char **argv)
 
 		/* Summarize interesting values. */
 		printf ("System uptime : %ld days, %ld:%02ld:%02ld\n",
-		    si.uptime / day, (si.uptime % day) / hour,
+            si.uptime / day, (si.uptime % day) / hour,
 		    (si.uptime % hour) / minute, si.uptime % minute);
 		printf ("Total RAM   : %5.1f MB\n", si.totalram / megabyte);
 		printf ("Free RAM   : %5.1f MB\n", si.freeram / megabyte);
 		printf ("Number of running processes : %d\n", si.procs);
 
-                printf("This system has %d processors configured and %d processors available.\n", get_nprocs_conf(), get_nprocs());
+        printf("This system has %d processors configured and %d processors \
+            available.\n", get_nprocs_conf(), get_nprocs());
 	}
 
 	if (argc > 1 and strncmp(argv[1], "3", BUF) == 0) {
-		printf("\t\tCdrom drive information.\n");
+		printf("\t\tDisk drive information.\n");
 
 		kernel("/proc/sys/dev/cdrom/info", 5);
+        
 	}
 
 	if (argc > 1 and strncmp(argv[1], "4", BUF) == 0) {
@@ -129,9 +130,7 @@ int main(int argc, char **argv)
 
 	if (argc > 1 and strncmp(argv[1], "5", BUF) == 0) {
 		printf("\t\tReal Time Clock information.\n");
-
 		kernel("/proc/driver/rtc", 3);
-
 	}
 
 	if (argc > 1 and strncmp(argv[1], "6", BUF) == 0) {
@@ -164,13 +163,6 @@ int main(int argc, char **argv)
 	if (argc > 1 and strncmp(argv[1], "8", BUF) == 0) {
 		printf("\t\tIP information.\n");
                 iface();
-//		kernel("/proc/net/tcp", 2);
-/*
-                This was taken straight from BusyBox's implementation of arp,
-                 in busybox-1_21_0/networking/arp.c directory of the BusyBox
-                 1.21.0 tarball. Look at the arp_show() function in particular.
-*/
-
 	}
 
 	if (argc > 1 and strncmp(argv[1], "9", BUF) == 0) {
@@ -179,11 +171,10 @@ int main(int argc, char **argv)
 	        passwd = getpwuid ( getuid());
 
 	        fprintf(stdout, "\t\tUser information.\n\n");
-		fprintf(stdout, "The Login Name is: %s\n", passwd->pw_name);
+            fprintf(stdout, "The Login Name is: %s\n", passwd->pw_name);
 	        fprintf(stdout, "The Login shell is: %s\n", passwd->pw_shell);
 	        fprintf(stdout, "The Login /home is: %s\n", passwd->pw_dir);
 	        fprintf(stdout, "The user information is: %s\n", passwd->pw_gecos);
         }
 	return 0;
 }
-

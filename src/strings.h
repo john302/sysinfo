@@ -1,3 +1,6 @@
+#ifndef STRINGS_H_
+#define STRINGS_H_
+
 /* Emacs style mode select: -*- C++ -*- *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -14,7 +17,7 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 *
 * Description: System Information program.
-* Author: bejiitas_wrath <johncartwright302@hotmail.com>
+* Author: bejiitas_wrath <johncartwright302@gmail.com>
 * Created at: Thu Oct 12 23:11:06 EST 2006
 * Computer: deusexmachina
 * System: Linux deusexmachina 2.6.27-14
@@ -23,14 +26,9 @@
 *
 ********************************************************************/
 
-#ifndef STRINGS_H_
-#define STRINGS_H_
+/* * I got the idea for this from sdldoom. Very nice indeed. */
 
-/*
- * I got the idea for this from sdldoom. Very nice indeed.
- */
-
-enum { VERSION = 160 };
+enum { VERSION = 176 };
 #define SYSINFO "Sysinfo version v%i.%i"
 
 const char *p = "System Information Program";

@@ -1,3 +1,6 @@
+#ifndef SYSINFO_H_
+#define SYSINFO_H_
+
 /* Emacs style mode select: -*- C++ -*- *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -14,7 +17,7 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 *
 * Description: System Information program.
-* Author: bejiitas_wrath <johncartwright302@hotmail.com>
+* Author: bejiitas_wrath <johncartwright302@gmail.com>
 * Created at: Thu Oct 12 23:11:06 EST 2006
 * Computer: deusexmachina
 * System: Linux deusexmachina 2.6.27-14
@@ -23,13 +26,10 @@
 *
 ********************************************************************/
 
-#ifndef SYSINFO_H_
-#define SYSINFO_H_
-
 #define BUF 0x05
 
 /*
- * Function prototypes. Sexy... And unlike on the show `24', function
+ * Function prototypes. Sexy... And unlike on the show '24', function
  * prototypes have nothing to to with hard disk sectors!
  */
 
@@ -64,7 +64,7 @@ void kernel(const char *File, int len)
 	f = fopen(File, "r");
 	if(!f) {
 		printf ("Sorry, I cannot open: %s.\n", File);
-		printf("Please check your permissions with\n"		\
+		printf("Please check your permissions with\n"	\
 			"your supervisor. The feature may not\n"	\
 			"be compiled and\\or enabled in your\n"		\
 			"kernel version. Or a scsi device, eg,\n"	\
