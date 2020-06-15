@@ -26,47 +26,46 @@
 *
 ********************************************************************/
 
-/*
+#include <netdb.h>
+#include <sys/types.h>
+#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
-#include <netdb.h>
-#include <ifaddrs.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <linux/if_link.h>
-*/
+
+void check_host_name(int hostname) { //This function returns host name for local computer
+   if (hostname == -1) {
+      perror("gethostname");
+      exit(1);
+   }
+}
+void check_host_entry(struct hostent * hostentry) { //find host info from host name
+   if (hostentry == NULL){
+      perror("gethostbyname");
+      exit(1);
+   }
+}
+void IP_formatter(char *IPbuffer) { //convert IP string to dotted decimal format
+   if (NULL == IPbuffer) {
+      perror("inet_ntoa");
+      exit(1);
+   }
+}
+
 
 int iface(void) {
 
-        char line[500]; // Read with fgets().
-        char ip_address[500]; // Obviously more space than necessary, just illustrating here.
-        int hw_type;
-        int flags;
-        char mac_address[500];
-        char mask[500];
-        char device[500];
+	char host[256];
+	char *IP;
+	struct hostent *host_entry;
+	int hostname;
+	hostname = gethostname(host, sizeof(host)); //find the host name
+	check_host_name(hostname);
+	host_entry = gethostbyname(host); //find host information
+	check_host_entry(host_entry);
+	IP = inet_ntoa(*((struct in_addr*) host_entry->h_addr_list[1])); //Convert into IP string
+	printf("Machine Host Name: %s\n", host);
+	printf("Machine IP address: %s.\n", IP);
 
-        FILE *fp = fopen("/proc/net/arp", "r");
-        fgets(line, sizeof(line), fp);    // Skip the first line (column headers).
-        while(fgets(line, sizeof(line), fp))
-        {
-            // Read the data.
-                sscanf(line, "%s 0x%x 0x%x %s %s %s\n",
-                  ip_address,
-                  &hw_type,
-                  &flags,
-                  mac_address,
-                  mask,
-                  device);
-
-            printf("IP: %s \n", ip_address);
-            printf("MAC: %s \n", mac_address);
-            printf("Dev: %s \n", device);
-            printf("HW Type: %u \n", hw_type);
-            printf("Mask: %s \n", mask);
-        }
-        fclose(fp);
         return 0;
 }
 

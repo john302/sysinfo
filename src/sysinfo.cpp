@@ -110,6 +110,8 @@ int main(int argc, char **argv)
 		printf ("Total RAM   : %5.1f MB\n", si.totalram / megabyte);
 		printf ("Free RAM   : %5.1f MB\n", si.freeram / megabyte);
 		printf ("Number of running processes : %d\n", si.procs);
+		printf ("Amount of swap space remaining: %ld\n", si.freeswap);
+		printf ("Total amount of swap space: %ld\n", si.totalswap);
 
         printf("This system has %d processors configured and %d processors \
             available.\n", get_nprocs_conf(), get_nprocs());
@@ -171,10 +173,11 @@ int main(int argc, char **argv)
 	        passwd = getpwuid ( getuid());
 
 	        fprintf(stdout, "\t\tUser information.\n\n");
-            fprintf(stdout, "The Login Name is: %s\n", passwd->pw_name);
+            	fprintf(stdout, "The Login Name is: %s\n", passwd->pw_name);
 	        fprintf(stdout, "The Login shell is: %s\n", passwd->pw_shell);
 	        fprintf(stdout, "The Login /home is: %s\n", passwd->pw_dir);
 	        fprintf(stdout, "The user information is: %s\n", passwd->pw_gecos);
         }
 	return 0;
 }
+
