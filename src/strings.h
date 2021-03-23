@@ -38,7 +38,7 @@ void print_menu() {
 	printf("\tSysinfo. %s\n\n", p);
 
 	printf("1 - Kernel Information.\n2 - Memory & processes.\n");
-	printf("3 - CDROM Information.\n4 - View list of sound cards.\n");
+	printf("3 - Disk space information.\n4 - View list of sound cards.\n");
 	printf("5 - View Real Time Clock Information.\n");
 	printf("6 - View motherboard and BIOS information.\n");
 	printf("7 - View information about your Xorg display.\n");
