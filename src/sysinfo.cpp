@@ -33,6 +33,7 @@
 #include <syscall.h>
 #include <sys/utsname.h>
 #include <sys/sysinfo.h>
+#include <sys/statvfs.h>
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -50,8 +51,13 @@ int main(int argc, char **argv)
 	struct utsname uname_pointer;
 	char* myarg1 = argv[1];
 
+	int statvfs(const char *path, struct statvfs *buf);
+	int fstatvfs(int fd, struct statvfs *buf);
+
 	if (!argc or !myarg1) {
 		print_menu();
+
+		testing();
 	}
 
 	if (argc > 1 and strncmp(argv[1], "1", BUF) == 0) {
@@ -118,10 +124,22 @@ int main(int argc, char **argv)
 	}
 
 	if (argc > 1 and strncmp(argv[1], "3", BUF) == 0) {
-		printf("\t\tDisk drive information.\n");
+		printf("\t\tDisk space information.\n");
 
-		kernel("/proc/sys/dev/cdrom/info", 5);
-        
+		const unsigned int GB = (1024 * 1024) * 1024;
+		struct statvfs buffer;
+		int ret = statvfs("/", &buffer);
+
+        const double total = (double)(buffer.f_blocks * buffer.f_frsize) / GB;
+        const double available = (double)(buffer.f_bfree * buffer.f_frsize) / GB;
+        const double used = total - available;
+        const double usedPercentage = (double)(used / total) * (double)100;
+		printf("Disk space on / in Gigabytes.\n\n");
+        printf("Total: %f --> %.0f GB.\n", total, total);
+        printf("Available: %f --> %.0f GB.\n", available, available);
+        printf("Used: %f --> %.1f GB.\n", used, used);
+        printf("Used Percentage: %f --> %.0f %%\n", usedPercentage, usedPercentage);
+
 	}
 
 	if (argc > 1 and strncmp(argv[1], "4", BUF) == 0) {
