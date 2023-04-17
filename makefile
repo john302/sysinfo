@@ -7,7 +7,7 @@ TARGET = sysinfo
 # Check debug options
 
 CFLAGS =-DGNU_SOURCE -Wall -finline-functions -fforce-addr -funroll-loops
-LDFLAGS =-shared-libgcc -lX11
+LDFLAGS =-shared-libgcc -lX11 -lXinerama
 
 # Our compiler
 CXX = gcc
