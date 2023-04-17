@@ -40,6 +40,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <X11/Xlib.h>
+#include <X11/extensions/Xinerama.h>
 #include <pwd.h>
 
 #include "sysinfo.h"
@@ -57,7 +58,7 @@ int main(int argc, char **argv)
 	if (!argc or !myarg1) {
 		print_menu();
 
-		testing();
+		//testing();
 	}
 
 	if (argc > 1 and strncmp(argv[1], "1", BUF) == 0) {
@@ -128,7 +129,7 @@ int main(int argc, char **argv)
 
 		const unsigned int GB = (1024 * 1024) * 1024;
 		struct statvfs buffer;
-		int ret = statvfs("/", &buffer);
+		//int ret = statvfs("/", &buffer);
 
         const double total = (double)(buffer.f_blocks * buffer.f_frsize) / GB;
         const double available = (double)(buffer.f_bfree * buffer.f_frsize) / GB;
@@ -167,16 +168,37 @@ int main(int argc, char **argv)
 	}
 
 	if (argc > 1 and strncmp(argv[1], "7", BUF) == 0) {
-		printf("\t\tXorg information.\n");
-		Display *display;
-		Screen *screen;
-		display = XOpenDisplay(NULL);
-		int count_screens = ScreenCount(display);
-		printf("Connected monitors: %d\n", count_screens);
-		for (int i = 0; i < count_screens; ++i) {
-			screen = ScreenOfDisplay(display, i);
-			printf("Screen resolution: %d: %dX%d\n", i + 1, screen->width, screen->height);
+		Display *d;
+		int i, n;
+		Display *display = XOpenDisplay(NULL);
+		d = XOpenDisplay (NULL);
+		if (!d) {
+			printf ("display is null!\n");
+			return 1;
 		}
+
+		int screenCount = ScreenCount(display);
+
+		n = ScreenCount (d);
+		printf ("screen count: %d; default screen: %d\n", n, DefaultScreen (d));
+		for (i = 0; i < n; i++)
+			printf ("[screen %d] width=%d height=%d\n", i, DisplayWidth (d, i), DisplayHeight (d, i));
+
+		if (XineramaIsActive (d)) {
+
+			XineramaScreenInfo *screens;
+			int num_screens;
+
+			screens = XineramaQueryScreens (d, &num_screens);
+			printf ("There are %d monitor(s) connected to your computer.\n", num_screens);
+
+			for (i = 0; i < num_screens; i++)
+				printf ("[screen %d] x_org=%hd y_org=%hd width=%hd height=%hd\n", i, screens[i].x_org, screens[i].y_org, screens[i].width, screens[i].height);
+
+		} else {
+			printf ("Xinerama is NOT active.\n");
+		}
+
 		XCloseDisplay(display);
 	}
 
@@ -198,4 +220,5 @@ int main(int argc, char **argv)
         }
 	return 0;
 }
+
 
