@@ -51,22 +51,29 @@ void IP_formatter(char *IPbuffer) { //convert IP string to dotted decimal format
    }
 }
 
-
 int iface(void) {
 
-	char host[256];
-	char *IP;
-	struct hostent *host_entry;
-	int hostname;
-	hostname = gethostname(host, sizeof(host)); //find the host name
-	check_host_name(hostname);
-	host_entry = gethostbyname(host); //find host information
-	check_host_entry(host_entry);
-	IP = inet_ntoa(*((struct in_addr*) host_entry->h_addr_list[1])); //Convert into IP string
-	printf("Machine Host Name: %s\n", host);
-	printf("Machine IP address: %s.\n", IP);
+    int sockfd;
+    struct sockaddr_in servaddr, localaddr;
+    socklen_t addrlen = sizeof(localaddr);
+    char *ip;
 
-        return 0;
+    // Create a socket and connect to a remote server
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_port = htons(80);
+    inet_pton(AF_INET, "8.8.8.8", &servaddr.sin_addr);
+    connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
+
+    // Get the local address of the socket
+    getsockname(sockfd, (struct sockaddr *)&localaddr, &addrlen);
+
+    // Convert the address to a string and print it
+    ip = inet_ntoa(localaddr.sin_addr);
+    printf("Machine IP address: %s.\n", ip);
+
+   return 0;
 }
 
 #endif
