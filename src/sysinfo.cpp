@@ -49,6 +49,7 @@
 
 int main(int argc, char **argv)
 {
+
 	struct utsname uname_pointer;
 	char* myarg1 = argv[1];
 
@@ -127,20 +128,8 @@ int main(int argc, char **argv)
 	if (argc > 1 and strncmp(argv[1], "3", BUF) == 0) {
 		printf("\t\tDisk space information.\n");
 
-		const unsigned int GB = (1024 * 1024) * 1024;
-		struct statvfs buffer;
-		//int ret = statvfs("/", &buffer);
-
-        const double total = (double)(buffer.f_blocks * buffer.f_frsize) / GB;
-        const double available = (double)(buffer.f_bfree * buffer.f_frsize) / GB;
-        const double used = total - available;
-        const double usedPercentage = (double)(used / total) * (double)100;
-		printf("Disk space on / in Gigabytes.\n\n");
-        printf("Total: %f --> %.0f GB.\n", total, total);
-        printf("Available: %f --> %.0f GB.\n", available, available);
-        printf("Used: %f --> %.1f GB.\n", used, used);
-        printf("Used Percentage: %f --> %.0f %%\n", usedPercentage, usedPercentage);
-
+		char * const command[] = {"df", "-Hla", "/", NULL, NULL, NULL, NULL};
+		execve("/bin/df", command, environ);
 	}
 
 	if (argc > 1 and strncmp(argv[1], "4", BUF) == 0) {
@@ -220,5 +209,6 @@ int main(int argc, char **argv)
         }
 	return 0;
 }
+
 
 
