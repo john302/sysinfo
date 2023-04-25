@@ -28,7 +28,7 @@
 
 /* * I got the idea for this from sdldoom. Very nice indeed. */
 
-enum { VERSION = 176 };
+enum { VERSION = 180 };
 #define SYSINFO "Sysinfo version v%i.%i"
 
 const char *p = "System Information Program";
